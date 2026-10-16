@@ -51,7 +51,7 @@ def main(config):
     dataset_train, dataset_val, dataset_test, data_loader_train, data_loader_val, data_loader_test = build_loader(
         config
     )
-    device = "cpu"
+    device = "cuda"
     model = build_model(config)
     # logger.info(str(model))
 
