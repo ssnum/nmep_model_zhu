@@ -2,7 +2,7 @@ import torch
 from torch import nn
 
 
-class LeNet(nn.Module):
+class AlexNet(nn.Module):
     """Fake LeNet with 32x32 color images and 200 classes"""
 
     def __init__(self, num_classes: int = 200) -> None:
