@@ -59,6 +59,7 @@ def main(config):
 
     # param and flop counts
     n_parameters = sum(p.numel() for p in model.parameters() if p.requires_grad)
+    
     toy_input = torch.rand(1, 3, config.DATA.IMG_SIZE, config.DATA.IMG_SIZE).to(device) # for measuring flops
     flops = FlopCountAnalysis(model, toy_input)
     del toy_input
