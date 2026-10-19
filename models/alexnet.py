@@ -3,34 +3,31 @@ from torch import nn
 
 
 class AlexNet(nn.Module):
-    """Fake LeNet with 32x32 color images and 200 classes"""
+    """AlexNet adapted for small images (use IMG_SIZE 70 for CIFAR-10)"""
 
     def __init__(self, num_classes: int = 200) -> None:
         super().__init__()
-        # Input NxNx3 # For CIFAR 10, you can set img_size to 70
-        
         self.features = nn.Sequential(
-            nn.Conv2d(11, 11, kernel_size=64, stride=4, padding=2),
-            nn.ReLU(), 
-            nn.MaxPool2d(kernel_size = (3,3), stride = 2),
-            nn.Conv2d(5, 5, kernel_size=192, padding=2),
+            nn.Conv2d(3, 64, kernel_size=11, stride=4, padding=2),
             nn.ReLU(),
-            nn.MaxPool2d(kernel_size = (3,3), stride = 2),
-            nn.Conv2d(3, 3, kernel_size=384, padding=1),
+            nn.MaxPool2d(kernel_size=3, stride=2),
+            nn.Conv2d(64, 192, kernel_size=5, padding=2),
             nn.ReLU(),
-            nn.Conv2d(3, 3, kernel_size=256, padding=1),
+            nn.MaxPool2d(kernel_size=3, stride=2),
+            nn.Conv2d(192, 384, kernel_size=3, padding=1),
             nn.ReLU(),
-            nn.Conv2d(3, 3, kernel_size=384, padding=1),
+            nn.Conv2d(384, 256, kernel_size=3, padding=1),
             nn.ReLU(),
-            nn.MaxPool2d(kernel_size = (3,3), stride = 2),
+            nn.Conv2d(256, 256, kernel_size=3, padding=1),
+            nn.ReLU(),
+            nn.MaxPool2d(kernel_size=3, stride=2),
             nn.AdaptiveAvgPool2d((6, 6)),
         )
-        
         self.classifier = nn.Sequential(
             nn.Dropout(0.5),
-            nn.Linear(3*6*6, 4096),
+            nn.Linear(256 * 6 * 6, 4096),
             nn.ReLU(),
-            nn.Dropout(0.5), 
+            nn.Dropout(0.5),
             nn.Linear(4096, 4096),
             nn.ReLU(),
             nn.Linear(4096, num_classes),

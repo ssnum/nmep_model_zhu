@@ -5,6 +5,7 @@ import os
 import shutil
 import time
 
+import wandb
 import numpy as np
 import torch
 import torch.nn as nn
@@ -84,10 +85,21 @@ def main(config):
         if config.EVAL_MODE:
             return
 
+
+
+    wandb.init(
+        project="nmep-hw3",
+        name=f"{config.MODEL.NAME}_lr{config.TRAIN.LR}_bs{config.DATA.BATCH_SIZE}",
+        config=yaml.safe_load(config.dump()),
+    )
+
     logger.info("Start training")
     start_time = time.time()
     for epoch in range(config.TRAIN.START_EPOCH, config.TRAIN.EPOCHS):
+        epoch_start = time.time()
         train_acc1, train_loss = train_one_epoch(config, model, criterion, data_loader_train, optimizer, epoch)
+        epoch_time = time.time() - epoch_start
+        lr_scheduler.step()
         logger.info(f" * Train Acc {train_acc1:.3f} Train Loss {train_loss:.3f}")
         logger.info(f"Accuracy of the network on the {len(dataset_train)} train images: {train_acc1:.1f}%")
 
@@ -104,8 +116,11 @@ def main(config):
 
 
         log_stats = {"epoch": epoch, "n_params": n_parameters, "n_flops": n_flops,
-                     "train_acc": train_acc1, "train_loss": train_loss, 
-                     "val_acc": val_acc1, "val_loss": val_loss}
+                     "train_acc": train_acc1, "train_loss": train_loss,
+                     "val_acc": val_acc1, "val_loss": val_loss,
+                     "epoch_time": epoch_time,
+                     "throughput": len(dataset_train) / epoch_time}
+        wandb.log(log_stats)
         with open(
                 os.path.join(config.OUTPUT, "metrics.json"), mode="a", encoding="utf-8"
             ) as f:
@@ -118,6 +133,7 @@ def main(config):
     logger.info("Start testing")
     preds = evaluate(config, data_loader_test, model)
     np.save(os.path.join(config.OUTPUT, "preds.npy"), preds)
+    wandb.finish()
 
 
 def train_one_epoch(config, model, criterion, data_loader, optimizer, epoch):
