@@ -40,14 +40,14 @@ class ResNetBlock(nn.Module):
         ## Initialize the block with a call to super and make your conv and batchnorm layers.
         super(ResNetBlock, self).__init__()
         # TODO: Initialize conv and batch norm layers with the correct parameters
-        self.conv1 = nn.Conv2d(out_channels, out_channels, kernel_size=3, stride=stride, padding=1),
-        self.bn1 = nn.BatchNorm2d(out_channels),
-        self.conv2 = nn.Conv2d(out_channels, out_channels, kernel_size=3, stride=1, padding=1),
-        self.bn2 = nn.BatchNorm2d(out_channels),
+        self.conv1 = nn.Conv2d(in_channels, out_channels, kernel_size=3, stride=stride, padding=1)
+        self.bn1 = nn.BatchNorm2d(out_channels)
+        self.conv2 = nn.Conv2d(out_channels, out_channels, kernel_size=3, stride=1, padding=1)
+        self.bn2 = nn.BatchNorm2d(out_channels)
         
         ## Use some conditional logic when defining your shortcut layer
-        self.op = nn.Sequential(nn.Conv2d(in_channels, out_channels, kernel_size=1, stride=1),
-                                nn.BatchNorm2d(out_channels),)
+        self.op = nn.Sequential(nn.Conv2d(in_channels, out_channels, kernel_size=1, stride=stride),
+                                nn.BatchNorm2d(out_channels))
         ## For a no-op layer, consider creating an empty nn.Sequential()
         self.no_op = nn.Sequential()
         
