@@ -5,6 +5,7 @@ Reference:
 [1] Kaiming He, Xiangyu Zhang, Shaoqing Ren, Jian Sun
     Deep Residual Learning for Image Recognition. arXiv:1512.03385
 """
+import torch
 import torch.nn as nn
 import torch.nn.functional as F
 
@@ -40,13 +41,13 @@ class ResNetBlock(nn.Module):
         super(ResNetBlock, self).__init__()
         # TODO: Initialize conv and batch norm layers with the correct parameters
         self.conv1 = nn.Conv2d(out_channels, out_channels, kernel_size=3, stride=stride, padding=1),
-        self.bn1 = nn.BatchNorm2D(out_channels),
+        self.bn1 = nn.BatchNorm2d(out_channels),
         self.conv2 = nn.Conv2d(out_channels, out_channels, kernel_size=3, stride=1, padding=1),
-        self.bn2 = nn.BatchNorm2D(out_channels),
+        self.bn2 = nn.BatchNorm2d(out_channels),
         
         ## Use some conditional logic when defining your shortcut layer
         self.op = nn.Sequential(nn.Conv2d(in_channels, out_channels, kernel_size=1, stride=1),
-                                nn.BatchNorm2D(out_channels),)
+                                nn.BatchNorm2d(out_channels),)
         ## For a no-op layer, consider creating an empty nn.Sequential()
         self.no_op = nn.Sequential()
         
