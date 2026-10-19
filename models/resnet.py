@@ -127,3 +127,4 @@ class ResNet18(nn.Module):
         x = F.adaptive_avg_pool2d(x, 1)
         x = torch.flatten(x, 1)
         x = self.linear(x)
+        return x
