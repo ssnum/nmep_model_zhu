@@ -91,7 +91,7 @@ def main(config):
 
     wandb.init(
         project="nmep-hw3",
-        name=f"{config.MODEL.NAME}_lr{config.TRAIN.LR}_bs{config.DATA.BATCH_SIZE}",
+        name=f"{config.MODEL.NAME}_lr{config.TRAIN.LR}_bs{config.DATA.BATCH_SIZE}" + (f"_{os.environ['AUG']}" if "AUG" in os.environ else ""),
         config=yaml.safe_load(config.dump()),
     )
 

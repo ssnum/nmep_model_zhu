@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import os
 import h5py
 import torch
 from PIL import Image, ImageFile
@@ -72,6 +73,7 @@ class CIFAR10Dataset(Dataset):
 
     def _get_transforms(self):
         if self.train:
+            scheme = os.environ.get("AUG", "baseline")
             transform = [
                 transforms.ColorJitter(brightness=0.4, contrast=0.4, saturation=0.4),
                 transforms.RandomHorizontalFlip(),
@@ -79,6 +81,10 @@ class CIFAR10Dataset(Dataset):
                 transforms.Normalize((0.4914, 0.4822, 0.4465), (0.2023, 0.1994, 0.2010)),
                 transforms.Resize([self.img_size] * 2),
             ]
+            if scheme in ("crop", "crop_erase"):
+                transform.append(transforms.RandomCrop(self.img_size, padding=self.img_size // 8))
+            if scheme == "crop_erase":
+                transform.append(transforms.RandomErasing(p=0.5))
         else:
             transform = [
                 transforms.ToTensor(),
