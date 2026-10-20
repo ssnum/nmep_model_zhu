@@ -1,17 +1,15 @@
 BASE: ['resnet18_base.yaml']
-AUG: 
-  RAND_AUGMENT: "rand-m9-mstd0.5-inc1"
 DATA:
   BATCH_SIZE: 128
   DATASET: "medium_imagenet"
-  IMG_SIZE: 32
+  IMG_SIZE: 96
   NUM_WORKERS: 32
   PIN_MEMORY: True
 MODEL:
   NUM_CLASSES: 200
 TRAIN:
   EPOCHS: 20
-  LR: 6e-2
+  LR: 1e-3
 OUTPUT: "output/resnet18_medium_imagenet"
 SAVE_FREQ: 1
 PRINT_FREQ: 500
